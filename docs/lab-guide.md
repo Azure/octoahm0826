@@ -66,7 +66,7 @@ The root answers: **Can users use the service?** The workspace has limited impac
 
 ## 4. Create the health model
 
-1. In the Azure portal, open **Azure Monitor** > **Health Models** > **Create**.
+1. In the Azure portal, open **Health Models** > **Create**.
 2. Select the lab subscription and resource group.
 3. Enter a name such as `octo-health-model-lab` and select a supported region.
 4. On **Identity**, enable the system-assigned managed identity.
@@ -80,10 +80,9 @@ Health models are preview resources. If the menu or a region is unavailable, che
 2. Rename the root display name to `Sample workload`.
 3. Select **Add entity** > **Azure resource**.
 4. Add the deployed Container App, managed environment, and Log Analytics workspace.
-5. Rename their display names to match the sketch.
-6. Connect parent to child by dragging from the parent's bottom handle to the child's top handle.
-7. Edit `Observability` and set **Impact** to **Limited**.
-8. Select **Save changes**.
+5. Connect parent to child by dragging from the parent's bottom handle to the child's top handle.
+6. Click on **Edit** and set **Impact** to **Limited**.
+7. Select **Save changes**.
 
 A relationship means the parent depends on the child. The default **Worst of** rollup is appropriate for this small model.
 
@@ -95,16 +94,21 @@ Open each entity with **Edit**, then select **Signals**.
 
 1. Under **Azure resource**, select **Add a signal assignment**.
 2. Use **Recommended** when available. Otherwise create a metric signal for replica count.
-3. Use an unhealthy threshold of fewer than one running replica.
-4. Add an **Azure Resource Health** signal if it is available.
+3. Use an unhealthy threshold of fewer than one running replica (Metric `Replica Count`).
 5. Save the entity.
 
 ### Hosting platform and observability
 
-Add an **Azure Resource Health** signal to each resource entity. For the workspace, optionally add a Log Analytics signal after logs arrive:
+Add a **Log Analytics workspace** to each resource entity. 
+
+1. Add Log Analytics signals
+2. Select Log analytics workspace
+3. Select the octo Log Analytics workspace
+4. Authorize if needed
+5. Add signal
 
 ```kusto
-ContainerAppConsoleLogs_CL
+ContainerAppConsoleLogs
 | where TimeGenerated > ago(15m)
 | summarize value = count()
 ```
