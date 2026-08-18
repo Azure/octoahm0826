@@ -16,7 +16,14 @@ Health models use a managed identity to read telemetry. A user-assigned identity
 
 ## 2. Deploy the sample workload
 
-Open Bash in Azure Cloud Shell or a local terminal from the repository root.
+Open Bash in [Azure Cloud Shell](https://shell.azure.com) or a local terminal, then clone the repository and move to its root:
+
+```bash
+git clone https://github.com/Azure/octoahm0826.git
+cd octoahm0826
+```
+
+Sign in to Azure and deploy the sample workload:
 
 ```bash
 az login

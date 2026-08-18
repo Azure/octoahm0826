@@ -1,0 +1,35 @@
+name: Validate Bicep
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Compile Bicep files
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install Bicep CLI
+        run: az bicep install
+
+      - name: Validate Bicep templates
+        shell: bash
+        run: |
+          while IFS= read -r -d '' file; do
+            echo "Validating $file"
+            az bicep build --file "$file" --stdout > /dev/null
+          done < <(find . -type f -name '*.bicep' -print0)
+
+      - name: Validate Bicep parameter files
+        shell: bash
+        run: |
+          while IFS= read -r -d '' file; do
+            echo "Validating $file"
+            az bicep build-params --file "$file" --stdout > /dev/null
+          done < <(find . -type f -name '*.bicepparam' -print0)
