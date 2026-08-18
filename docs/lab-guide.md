@@ -26,11 +26,11 @@ cd octoahm0826
 Sign in to Azure and deploy the sample workload:
 
 ```bash
-az login
+az login # not needed in azure cloud shell
 az account set --subscription "<subscription-name-or-id>"
 
 RESOURCE_GROUP="rg-octo-health-model-lab"
-LOCATION="eastus"
+LOCATION="canadacentral"
 
 az group create --name "$RESOURCE_GROUP" --location "$LOCATION"
 az deployment group create \

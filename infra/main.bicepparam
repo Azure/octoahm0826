@@ -1,6 +1,6 @@
 using './main.bicep'
 
-param location = 'eastus'
+param location = 'canadacentral'
 param namePrefix = 'octo-health'
 param tags = {
   purpose: 'health-model-training'
