@@ -1,33 +1,64 @@
-# Project
+# OCTO Brown Bag: Azure Monitor Health Models
 
-> This repo has been populated by an initial template to help get you started. Please
-> make sure to update the content to build a great experience for community-building.
+Training material for the **OCTO Brown Bag & Showcase Series: Azure Monitor Health Models**.
 
-As the maintainer of this project, please make a few updates:
+Azure Monitor health models add business context to existing metrics and logs. Instead of reviewing disconnected alerts, teams model workload components, dependencies, and an overall health state.
 
-- Improving this README.MD file to provide a great experience
-- Updating SUPPORT.MD with content about this project's support experience
-- Understanding the security reporting process in SECURITY.MD
-- Remove this section from the README
+> Azure Monitor health models are currently in preview. Confirm current availability and behavior in the linked documentation before using them in production.
+
+## Learning goals
+
+By the end of the session, participants can:
+
+- Explain entities, relationships, signals, health states, and health rollup.
+- Describe how health models reduce alert noise and show service impact.
+- Design a small model around a user or business outcome.
+- Build and test a first health model in the Azure portal.
+
+## Session outline
+
+1. Why health modeling: from individual signals to end-to-end service health.
+2. Azure Monitor health models: concepts, capabilities, preview status, and product direction.
+3. Design practices and common patterns.
+4. Hands-on lab: deploy a sample workload, model it, and inspect health evaluation.
+
+## Sample workload
+
+The Bicep template deploys a public hello-world Container App, a Container Apps environment, and a Log Analytics workspace.
+
+```mermaid
+graph TD
+    User[User request] --> App[Container App]
+    App --> Env[Container Apps environment]
+    Env -. application logs .-> Logs[Log Analytics workspace]
+```
+
+This is a training workload, not a production architecture. Azure consumption and log-ingestion charges may apply.
+
+## Start the lab
+
+Follow [docs/lab-guide.md](docs/lab-guide.md). Allow about 45 minutes.
+
+## Repository layout
+
+- `docs/lab-guide.md`: step-by-step lab and design guidance.
+- `infra/main.bicep`: deployable sample workload using Azure Verified Modules.
+- `infra/main.bicepparam`: example deployment values.
+
+## References
+
+- [Health models overview](https://learn.microsoft.com/azure/azure-monitor/health-models/overview)
+- [Health model concepts](https://learn.microsoft.com/azure/azure-monitor/health-models/concepts)
+- [Create a health model](https://learn.microsoft.com/azure/azure-monitor/health-models/create)
+- [Azure Monitor documentation](https://learn.microsoft.com/azure/azure-monitor/)
+- [Azure updates](https://azure.microsoft.com/updates/)
 
 ## Contributing
 
-This project welcomes contributions and suggestions.  Most contributions require you to agree to a
-Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
-the rights to use your contribution. For details, visit [Contributor License Agreements](https://cla.opensource.microsoft.com).
+This project welcomes contributions and suggestions. Most contributions require you to agree to a [Contributor License Agreement](https://cla.opensource.microsoft.com) declaring that you have the right to grant us the rights to use your contribution.
 
-When you submit a pull request, a CLA bot will automatically determine whether you need to provide
-a CLA and decorate the PR appropriately (e.g., status check, comment). Simply follow the instructions
-provided by the bot. You will only need to do this once across all repos using our CLA.
-
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
-For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
-contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). See the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with questions.
 
 ## Trademarks
 
-This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft
-trademarks or logos is subject to and must follow
-[Microsoft's Trademark & Brand Guidelines](https://www.microsoft.com/legal/intellectualproperty/trademarks/usage/general).
-Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship.
-Any use of third-party trademarks or logos are subject to those third-party's policies.
+Use of Microsoft trademarks or logos must follow [Microsoft's Trademark and Brand Guidelines](https://www.microsoft.com/legal/intellectualproperty/trademarks/usage/general). Modified versions must not cause confusion or imply Microsoft sponsorship.
