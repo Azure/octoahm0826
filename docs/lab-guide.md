@@ -59,11 +59,11 @@ Use this dependency chain:
 Sample workload (root)
 └── Web application (Container App)
   ├── Hosting platform (Container Apps environment)
-  │   └── Observability (Log Analytics workspace)
-  └── Secrets (Key Vault)
+  │   └── Log Analytics (Log Analytics workspace)
+  └── Key Vault (Key Vault)
 ```
 
-The root answers: **Can users use the service?** The web application depends directly on its hosting platform and secrets store. The workspace has limited impact because losing logs reduces operability but does not immediately stop the app.
+The root answers: **Can users use the service?** The web application depends directly on its hosting platform and Key Vault. Log Analytics has limited impact because losing logs reduces operability but does not immediately stop the app.
 
 ## 4. Create the health model
 
@@ -81,10 +81,19 @@ Health models are preview resources. If the menu or a region is unavailable, che
 2. Rename the root display name to `Sample workload`.
 3. Select **Add entity** > **Azure resource**.
 4. Add the deployed Container App, managed environment, Key Vault, and Log Analytics workspace.
-5. Connect parent to child by dragging from the parent's bottom handle to the child's top handle.
-6. Connect `Web application` to both `Hosting platform` and `Secrets`, then connect `Hosting platform` to `Observability`.
-7. Edit `Observability` and set **Impact** to **Limited**.
-8. Select **Save changes**.
+5. Rename their display names to `Web application`, `Hosting platform`, `Key Vault`, and `Log Analytics`.
+6. Connect parent to child by dragging from the parent's bottom handle to the child's top handle.
+7. Connect `Web application` to both `Hosting platform` and `Key Vault`, then connect `Hosting platform` to `Log Analytics`.
+8. Edit `Log Analytics` and set **Impact** to **Limited**.
+9. Select **Save changes**.
+
+```mermaid
+graph TD
+  Root[Sample workload] --> App[Web application]
+  App --> Platform[Hosting platform]
+  App --> Vault[Key Vault]
+  Platform -->|Limited impact| Logs[Log Analytics]
+```
 
 A relationship means the parent depends on the child. The default **Worst of** rollup is appropriate for this small model.
 
@@ -99,7 +108,7 @@ Open each entity with **Edit**, then select **Signals**.
 3. Use an unhealthy threshold of fewer than one running replica (Metric `Replica Count`).
 5. Save the entity.
 
-### Hosting platform, secrets, and observability
+### Hosting platform, Key Vault, and Log Analytics
 
 Add a **Log Analytics workspace** signal to each resource entity.
 
@@ -115,7 +124,7 @@ ContainerAppConsoleLogs
 | summarize value = count()
 ```
 
-For `Secrets`, use the Key Vault audit logs sent by its diagnostic setting:
+For `Key Vault`, use the audit logs sent by its diagnostic setting:
 
 ```kusto
 AZKVAuditLogs
