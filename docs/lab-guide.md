@@ -92,7 +92,7 @@ graph TD
   Root[Sample workload] --> App[Web application]
   App --> Platform[Hosting platform]
   App --> Vault[Key Vault]
-  Platform -->|Limited impact| Logs[Log Analytics]
+  Platform --> Logs[Log Analytics]
 ```
 
 A relationship means the parent depends on the child. The default **Worst of** rollup is appropriate for this small model.
