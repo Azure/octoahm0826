@@ -91,7 +91,7 @@ module app 'br/public:avm/res/app/container-app:0.23.0' = {
     ingressAllowInsecure: false
     ingressTargetPort: 80
     scaleSettings: {
-      minReplicas: 1
+      minReplicas: 2
       maxReplicas: 2
     }
     tags: tags

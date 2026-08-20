@@ -105,7 +105,7 @@ Open each entity with **Edit**, then select **Signals**.
 
 1. Under **Azure resource**, select **Add a signal assignment**.
 2. Use **Recommended** when available. Otherwise create a metric signal for replica count.
-3. Use an unhealthy threshold of fewer than one running replica (Metric `Replica Count`).
+3. Use an unhealthy threshold of fewer than two running replicas (Metric `Replica Count`).
 5. Save the entity.
 
 ### Hosting platform, Key Vault, and Log Analytics
@@ -155,7 +155,7 @@ APP_NAME=$(az containerapp list \
 az containerapp update \
   --resource-group "$RESOURCE_GROUP" \
   --name "$APP_NAME" \
-  --min-replicas 0
+  --min-replicas 0 --max-replicas 1
 ```
 
 Avoid sending requests while the app scales to zero. Wait for the signal refresh interval, then inspect **Graph**, **Timeline**, and entity details. Restore the app:
@@ -164,7 +164,7 @@ Avoid sending requests while the app scales to zero. Wait for the signal refresh
 az containerapp update \
   --resource-group "$RESOURCE_GROUP" \
   --name "$APP_NAME" \
-  --min-replicas 1 \
+  --min-replicas 2 \
   --max-replicas 2
 ```
 
