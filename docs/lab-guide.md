@@ -10,7 +10,7 @@ You need:
 - An Azure subscription.
 - Azure CLI with Bicep support, or Azure Cloud Shell.
 - **Contributor** on the target resource group to create a health model.
-- Permission to create Container Apps and Log Analytics resources.
+- Permission to create Container Apps, Key Vault, and Log Analytics resources.
 
 Health models use a managed identity to read telemetry. A user-assigned identity needs **Monitoring Reader** on monitored resources and workspaces. See [health model permissions](https://learn.microsoft.com/azure/azure-monitor/health-models/create#permissions-required).
 
@@ -58,11 +58,12 @@ Use this dependency chain:
 ```text
 Sample workload (root)
 └── Web application (Container App)
-    └── Hosting platform (Container Apps environment)
-        └── Observability (Log Analytics workspace)
+  ├── Hosting platform (Container Apps environment)
+  │   └── Observability (Log Analytics workspace)
+  └── Secrets (Key Vault)
 ```
 
-The root answers: **Can users use the service?** The workspace has limited impact because losing logs reduces operability but does not immediately stop the app.
+The root answers: **Can users use the service?** The web application depends directly on its hosting platform and secrets store. The workspace has limited impact because losing logs reduces operability but does not immediately stop the app.
 
 ## 4. Create the health model
 
@@ -79,10 +80,11 @@ Health models are preview resources. If the menu or a region is unavailable, che
 1. Open the health model and select **Designer**.
 2. Rename the root display name to `Sample workload`.
 3. Select **Add entity** > **Azure resource**.
-4. Add the deployed Container App, managed environment, and Log Analytics workspace.
+4. Add the deployed Container App, managed environment, Key Vault, and Log Analytics workspace.
 5. Connect parent to child by dragging from the parent's bottom handle to the child's top handle.
-6. Click on **Edit** and set **Impact** to **Limited**.
-7. Select **Save changes**.
+6. Connect `Web application` to both `Hosting platform` and `Secrets`, then connect `Hosting platform` to `Observability`.
+7. Edit `Observability` and set **Impact** to **Limited**.
+8. Select **Save changes**.
 
 A relationship means the parent depends on the child. The default **Worst of** rollup is appropriate for this small model.
 
@@ -97,9 +99,9 @@ Open each entity with **Edit**, then select **Signals**.
 3. Use an unhealthy threshold of fewer than one running replica (Metric `Replica Count`).
 5. Save the entity.
 
-### Hosting platform and observability
+### Hosting platform, secrets, and observability
 
-Add a **Log Analytics workspace** to each resource entity. 
+Add a **Log Analytics workspace** signal to each resource entity.
 
 1. Add Log Analytics signals
 2. Select Log analytics workspace
@@ -109,6 +111,14 @@ Add a **Log Analytics workspace** to each resource entity.
 
 ```kusto
 ContainerAppConsoleLogs
+| where TimeGenerated > ago(15m)
+| summarize value = count()
+```
+
+For `Secrets`, use the Key Vault audit logs sent by its diagnostic setting:
+
+```kusto
+AZKVAuditLogs
 | where TimeGenerated > ago(15m)
 | summarize value = count()
 ```

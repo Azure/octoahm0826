@@ -24,13 +24,15 @@ By the end of the session, participants can:
 
 ## Sample workload
 
-The Bicep template deploys a public hello-world Container App, a Container Apps environment, and a Log Analytics workspace.
+The Bicep template deploys a public hello-world Container App, a Container Apps environment, a locked-down Key Vault, and a Log Analytics workspace.
 
 ```mermaid
 graph TD
     User[User request] --> App[Container App]
     App --> Env[Container Apps environment]
+    App --> Vault[Key Vault]
     Env -. application logs .-> Logs[Log Analytics workspace]
+    Vault -. audit logs .-> Logs
 ```
 
 This is a training workload, not a production architecture. Azure consumption and log-ingestion charges may apply.

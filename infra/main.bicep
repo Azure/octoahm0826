@@ -18,6 +18,7 @@ var suffix = uniqueString(subscription().subscriptionId, resourceGroup().id)
 var workspaceName = '${namePrefix}-logs-${suffix}'
 var environmentName = '${namePrefix}-env-${suffix}'
 var appName = '${namePrefix}-app-${suffix}'
+var keyVaultName = 'octo-kv-${suffix}'
 
 module workspace 'br/public:avm/res/operational-insights/workspace:0.16.0' = {
   params: {
@@ -38,6 +39,35 @@ module environment 'br/public:avm/res/app/managed-environment:0.15.0' = {
       destination: 'log-analytics'
       logAnalyticsWorkspaceResourceId: workspace.outputs.resourceId
     }
+    tags: tags
+  }
+}
+
+module keyVault 'br/public:avm/res/key-vault/vault:0.9.0' = {
+  params: {
+    name: keyVaultName
+    location: location
+    enableRbacAuthorization: true
+    enablePurgeProtection: true
+    softDeleteRetentionInDays: 90
+    publicNetworkAccess: 'Disabled'
+    networkAcls: {
+      defaultAction: 'Deny'
+      ipRules: []
+    }
+    diagnosticSettings: [
+      {
+        name: 'send-to-log-analytics'
+        workspaceResourceId: workspace.outputs.resourceId
+        logAnalyticsDestinationType: 'Dedicated'
+        logCategoriesAndGroups: [
+          {
+            category: 'AuditEvent'
+            enabled: true
+          }
+        ]
+      }
+    ]
     tags: tags
   }
 }
@@ -71,4 +101,5 @@ module app 'br/public:avm/res/app/container-app:0.23.0' = {
 output appUrl string = 'https://${app.outputs.fqdn}'
 output containerAppResourceId string = app.outputs.resourceId
 output environmentResourceId string = environment.outputs.resourceId
+output keyVaultResourceId string = keyVault.outputs.resourceId
 output logAnalyticsWorkspaceResourceId string = workspace.outputs.resourceId
