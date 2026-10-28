@@ -73,12 +73,4 @@ All telemetry is labeled with `demo.synthetic=true`, `demo.app`, `demo.runId`, `
 
 Uploads use bounded batches and retry transient HTTP failures. A partial response retries only rejected, retryable items; accepted items are not resent. Permanent rejection stops the run. Network failures with no ingestion response stop rather than blindly replaying a possibly accepted batch. HTTP acceptance is not a guarantee of query visibility or Application Map rendering. Ctrl+C stops the process; unsubmitted in-memory telemetry is not guaranteed to be delivered.
 
-## Local checks
-
-```powershell
-.\Test-DemoTelemetry.ps1
-```
-
-Checks exercise the actual generator and sender with mocked HTTP and Azure CLI boundaries; they never send to Azure. They cover span correlation/timing, degradation and recovery, file preservation, destination validation, partial acceptance, bounded retries, permanent rejection, Entra token use, and repeated cycles. Live ingestion and portal rendering still require a configured demo resource.
-
 References: [telemetry data model](https://learn.microsoft.com/en-us/azure/azure-monitor/app/data-model-complete), [connection strings](https://learn.microsoft.com/en-us/azure/azure-monitor/app/connection-strings), [Application map](https://learn.microsoft.com/en-us/azure/azure-monitor/app/app-map), [Entra authentication](https://learn.microsoft.com/en-us/azure/azure-monitor/app/azure-ad-authentication).
