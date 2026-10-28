@@ -16,15 +16,29 @@ param tags object = {
 
 var suffix = uniqueString(subscription().subscriptionId, resourceGroup().id)
 var workspaceName = '${namePrefix}-logs-${suffix}'
+var applicationInsightsName = '${namePrefix}-insights-${suffix}'
 var environmentName = '${namePrefix}-env-${suffix}'
 var appName = '${namePrefix}-app-${suffix}'
 var keyVaultName = 'octo-kv-${suffix}'
+var redisCacheName = '${namePrefix}-redis-${suffix}'
 
 module workspace 'br/public:avm/res/operational-insights/workspace:0.16.0' = {
   params: {
     name: workspaceName
     location: location
     dataRetention: 30
+    tags: tags
+  }
+}
+
+module applicationInsights 'br/public:avm/res/insights/component:0.8.0' = {
+  params: {
+    name: applicationInsightsName
+    location: location
+    workspaceResourceId: workspace.outputs.resourceId
+    kind: 'web'
+    retentionInDays: 30
+    disableIpMasking: false
     tags: tags
   }
 }
@@ -72,6 +86,16 @@ module keyVault 'br/public:avm/res/key-vault/vault:0.9.0' = {
   }
 }
 
+module redisCache 'br/public:avm/res/cache/redis-enterprise:0.5.1' = {
+  params: {
+    name: redisCacheName
+    location: location
+    skuName: 'Balanced_B0'
+    publicNetworkAccess: 'Disabled'
+    tags: tags
+  }
+}
+
 module app 'br/public:avm/res/app/container-app:0.23.0' = {
   params: {
     name: appName
@@ -103,3 +127,5 @@ output containerAppResourceId string = app.outputs.resourceId
 output environmentResourceId string = environment.outputs.resourceId
 output keyVaultResourceId string = keyVault.outputs.resourceId
 output logAnalyticsWorkspaceResourceId string = workspace.outputs.resourceId
+output applicationInsightsResourceId string = applicationInsights.outputs.resourceId
+output redisCacheResourceId string = redisCache.outputs.resourceId
