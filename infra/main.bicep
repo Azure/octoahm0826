@@ -20,7 +20,7 @@ var applicationInsightsName = '${namePrefix}-insights-${suffix}'
 var environmentName = '${namePrefix}-env-${suffix}'
 var appName = '${namePrefix}-app-${suffix}'
 var keyVaultName = 'octo-kv-${suffix}'
-var redisCacheName = '${namePrefix}-redis-${suffix}'
+// var redisCacheName = '${namePrefix}-redis-${suffix}'
 
 module workspace 'br/public:avm/res/operational-insights/workspace:0.16.0' = {
   params: {
@@ -86,15 +86,15 @@ module keyVault 'br/public:avm/res/key-vault/vault:0.9.0' = {
   }
 }
 
-module redisCache 'br/public:avm/res/cache/redis-enterprise:0.5.1' = {
-  params: {
-    name: redisCacheName
-    location: location
-    skuName: 'Balanced_B0'
-    publicNetworkAccess: 'Disabled'
-    tags: tags
-  }
-}
+// module redisCache 'br/public:avm/res/cache/redis-enterprise:0.5.1' = {
+//   params: {
+//     name: redisCacheName
+//     location: location
+//     skuName: 'Balanced_B0'
+//     publicNetworkAccess: 'Disabled'
+//     tags: tags
+//   }
+// }
 
 module app 'br/public:avm/res/app/container-app:0.23.0' = {
   params: {
@@ -128,4 +128,4 @@ output environmentResourceId string = environment.outputs.resourceId
 output keyVaultResourceId string = keyVault.outputs.resourceId
 output logAnalyticsWorkspaceResourceId string = workspace.outputs.resourceId
 output applicationInsightsResourceId string = applicationInsights.outputs.resourceId
-output redisCacheResourceId string = redisCache.outputs.resourceId
+// output redisCacheResourceId string = redisCache.outputs.resourceId
