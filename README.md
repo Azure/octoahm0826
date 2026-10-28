@@ -46,6 +46,7 @@ Follow [docs/lab-guide.md](docs/lab-guide.md). Allow about 45 minutes.
 - `docs/lab-guide.md`: step-by-step lab and design guidance.
 - `infra/main.bicep`: deployable sample workload using Azure Verified Modules.
 - `infra/main.bicepparam`: example deployment values.
+- [tools/appinsights-simulator/](tools/appinsights-simulator/README.md): optional synthetic multi-tier application telemetry for Application Insights.
 
 ## References
 

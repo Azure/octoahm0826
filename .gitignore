@@ -427,3 +427,6 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# Local Application Insights simulator output
+tools/appinsights-simulator/*.ndjson
